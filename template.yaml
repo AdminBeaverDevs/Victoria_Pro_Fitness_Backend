@@ -89,9 +89,9 @@ Resources:
       MasterUsername: !Ref DBUsername
       MasterUserPassword: !Ref DBPassword
       DBName: !Ref DBName
-      PubliclyAccessible: false
       MultiAZ: false
       StorageType: gp2
+      PubliclyAccessible: true
             
 Outputs:
   VictoriaProFitnessApiGateway:

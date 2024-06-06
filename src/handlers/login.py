@@ -2,6 +2,7 @@
 
 from sqlalchemy import create_engine
 from models.database.user import User 
+from sqlalchemy.orm import sessionmaker
 
 
 def handler(event, context):
