@@ -3,3 +3,4 @@ aws-lambda-powertools
 python-jose
 pydantic
 SQLAlchemy
+MySQLdb
