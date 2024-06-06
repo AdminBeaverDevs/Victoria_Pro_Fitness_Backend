@@ -1,0 +1,129 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Sample SAM Template for basic-aws-apigateway-demo
+
+Parameters:
+  DBInstanceIdentifier:
+    Description: The database name
+    Type: String
+    Default: mymysqlinstance
+
+  DBName:
+    Description: The name of the database to create
+    Type: String
+    Default: VictoriaProFitnessDb
+
+  DBUsername:
+    Description: The database admin account username
+    Type: String
+    Default: admin
+
+  DBPassword:
+    Description: The database admin account password
+    Type: String
+    NoEcho: true
+    MinLength: 8
+    MaxLength: 41
+    Default: password
+
+  DBInstanceClass:
+    Description: The database instance type
+    Type: String
+    Default: db.t2.large
+    AllowedValues:
+      - db.t2.micro
+      - db.t2.small
+      - db.t2.medium
+      - db.t2.large
+    ConstraintDescription: must be a valid RDS instance type.
+
+  AllocatedStorage:
+    Description: The size of the database (Gb)
+    Type: Number
+    Default: 20
+    MinValue: 5
+    MaxValue: 1024
+    ConstraintDescription: must be between 5 and 1024Gb.
+
+
+Resources:
+  
+  VictoriaProFitnessApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: Basic AWS Api Gateway
+      StageName: stage
+      Cors:
+        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowHeaders: "'content-type'"
+        AllowOrigin: "'*'"
+
+  RequirementsLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      CompatibleArchitectures:
+        - x86_64
+      ContentUri: layer
+
+  LoginService:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src
+      Handler: handlers/login.handler
+      Runtime: python3.11
+      Layers:
+        - !Ref RequirementsLayer
+      Policies: 
+        - DynamoDBCrudPolicy:
+            TableName: 
+              !Ref UserTable
+      Events:
+        HelloWorldApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref VictoriaProFitnessApiGateway
+            Path: /login
+            Method: POST
+  
+  VictoriaDBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties: 
+      DBInstanceIdentifier: !Ref DBInstanceIdentifier
+      AllocatedStorage: !Ref AllocatedStorage
+      DBInstanceClass: !Ref DBInstanceClass
+      Engine: MySQL
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      DBName: !Ref DBName
+      PubliclyAccessible: false
+      MultiAZ: false
+      StorageType: gp2
+            
+Outputs:
+  VictoriaProFitnessApiGateway:
+    Description: 'API Gateway endpoint URL for Staging stage for Hello World function'
+    Value: !Sub 'https://${VictoriaProFitnessApiGateway}.execute-api.${AWS::Region}.amazonaws.com/Staging/hello/'
+  VictoriaProFitnessApiGatewayRestApiId:
+    Description: 'API Gateway ARN for Basic AWS API Gateway'
+    Value: !Ref VictoriaProFitnessApiGateway
+    Export:
+      Name: VictoriaProFitnessApiGateway-RestApiId
+  VictoriaProFitnessApiGatewayRootResourceId:
+    Value: !GetAtt VictoriaProFitnessApiGateway.RootResourceId
+    Export:
+      Name: VictoriaProFitnessApiGateway-RootResourceId
+   DBInstanceEndpoint:
+    Description: The connection endpoint for the database
+    Value: !GetAtt 
+      - VictoriaDBInstance
+      - Endpoint.Address
+    Export:
+      Name: DBInstanceEndpoint
+  DBInstancePort:
+    Description: The connection port for the database
+    Value: !GetAtt 
+      - VictoriaDBInstance
+      - Endpoint.Port
+    Export:
+      Name: DBInstancePort
