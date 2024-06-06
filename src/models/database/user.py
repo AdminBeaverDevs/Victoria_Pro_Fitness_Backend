@@ -1,4 +1,5 @@
 from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy import Column, String, Integer, Date
 
 class Base(DeclarativeBase):
     pass
