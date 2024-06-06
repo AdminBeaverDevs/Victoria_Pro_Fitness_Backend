@@ -46,7 +46,6 @@ Parameters:
     MaxValue: 1024
     ConstraintDescription: must be between 5 and 1024Gb.
 
-
 Resources:
   
   VictoriaProFitnessApiGateway:
@@ -113,7 +112,7 @@ Outputs:
     Value: !GetAtt VictoriaProFitnessApiGateway.RootResourceId
     Export:
       Name: VictoriaProFitnessApiGateway-RootResourceId
-   DBInstanceEndpoint:
+  DBInstanceEndpoint:
     Description: The connection endpoint for the database
     Value: !GetAtt 
       - VictoriaDBInstance
