@@ -74,10 +74,6 @@ Resources:
       Runtime: python3.11
       Layers:
         - !Ref RequirementsLayer
-      Policies: 
-        - DynamoDBCrudPolicy:
-            TableName: 
-              !Ref UserTable
       Events:
         HelloWorldApi:
           Type: Api
