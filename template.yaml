@@ -66,6 +66,7 @@ Resources:
       ContentUri: layer
 
   LoginService:
+    DependsOn: !Ref RequirementsLayer
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: src
