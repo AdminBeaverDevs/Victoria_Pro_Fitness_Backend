@@ -1,8 +1,10 @@
-import sqlalchemy.ext.declarative.declarative_base
+from sqlalchemy.orm import DeclarativeBase
 
-base = declarative_base()
+class Base(DeclarativeBase):
+    pass
 
-class User(base):
+
+class User(Base):
     __tablename__ = "User"
     ShipName = Column(String,primary_key=True)
     Freight = Column(String)
