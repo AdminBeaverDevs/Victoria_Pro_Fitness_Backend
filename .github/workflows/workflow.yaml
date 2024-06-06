@@ -34,4 +34,4 @@ jobs:
 
       - name: sam deploy
         run: | 
-          sam deploy --no-confirm-changeset --no-fail-on-empty-changeset  --stack-name vpfitness-api-stack --s3-bucket vpfitness-back-end --capabilities CAPABILITY_IAM --region us-east-1
+          sam deploy --no-confirm-changeset --no-fail-on-empty-changeset  --stack-name vpfitness-api-stack --s3-bucket vpfitness-backend-${{ inputs.environment }} --capabilities CAPABILITY_IAM --region us-east-1
