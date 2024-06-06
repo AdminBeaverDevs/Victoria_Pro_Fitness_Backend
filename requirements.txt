@@ -4,3 +4,4 @@ python-jose
 pydantic
 SQLAlchemy
 PyMySQL
+sqlalchemy-orm
