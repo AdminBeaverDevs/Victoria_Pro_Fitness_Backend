@@ -141,6 +141,17 @@ Resources:
             Path: /login
             Method: POST
   
+  DatabaseProcess:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: src
+      Handler: handlers/database_process.handler
+      Layers:
+        - !Ref RequirementsLayer
+      Policies:
+        - AWSLambdaVPCAccessExecutionRole
+
+  
   VictoriaDBInstance:
     Type: AWS::RDS::DBInstance
     Properties: 
