@@ -44,6 +44,16 @@ Parameters:
     MaxValue: 1024
     ConstraintDescription: must be between 5 and 1024Gb.
 
+
+Globals:
+  Function:
+    Runtime: python3.11
+    Timeout: 30
+    Environment:
+      Variables:
+        TABLE_NAME: data-table
+    VpcConfig: !GetAtt VPC.DefaultSecurityGroup
+    
 Resources:
   
   VictoriaProFitnessApiGateway:
@@ -68,7 +78,7 @@ Resources:
     Properties:
       CodeUri: src
       Handler: handlers/login.handler
-      Runtime: python3.11
+      
       Layers:
         - !Ref RequirementsLayer
       Events:
