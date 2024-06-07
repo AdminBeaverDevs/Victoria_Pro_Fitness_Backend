@@ -7,7 +7,9 @@ from sqlalchemy.orm import sessionmaker
 
 def handler(event, context):
     
-    engine = create_engine('mysql+pymysql://admin:password@mymysqlinstance.cbyoyq0e6uzw.us-east-1.rds.amazonaws.com/VictoriaProFitnessDb')    
+    engine = create_engine('mysql+pymysql://admin:password@mymysqlinstance.cbyoyq0e6uzw.us-east-1.rds.amazonaws.com:3306/VictoriaProFitnessDb')    
     Session = sessionmaker(bind=engine)    
-    db_conn.create(User)
+    session = Session()
+    movies = session.query(User).all()
+    
     return {}
