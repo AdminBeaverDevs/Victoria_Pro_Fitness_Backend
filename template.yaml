@@ -88,6 +88,25 @@ Resources:
     Properties:
       CidrBlock: 10.0.0.0/16
 
+  MyDBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      VpcId: !Ref MyVPC
+      GroupDescription: Enable RDS access
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: 0.0.0.0/0  # Note: For production, restrict this to specific IP ranges or security groups
+
+  MyDBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnet group for RDS instance
+      SubnetIds:
+          - !Ref MySubnet1
+          - !Ref MySubnet2
+
   VictoriaProFitnessApiGateway:
     Type: AWS::Serverless::Api
     Properties:
@@ -134,6 +153,9 @@ Resources:
       DBName: !Ref DBName
       MultiAZ: false
       StorageType: gp2
+      VPCSecurityGroups:
+        - !Ref MyDBSecurityGroup
+      DBSubnetGroupName: !Ref MyDBSubnetGroup
       PubliclyAccessible: true
             
 Outputs:
