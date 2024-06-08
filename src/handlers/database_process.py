@@ -1,16 +1,18 @@
-
-
-from sqlalchemy import create_engine
+from datasources.mysql import Session, engine, Base
 from models.database.user import User 
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm import DeclarativeBase
-
+from utils.helpers import AlchemyEncoder
+import json
 
 def handler(event, context):
-    
-    engine = create_engine('mysql+pymysql://admin:password@mymysqlinstance.cbyoyq0e6uzw.us-east-1.rds.amazonaws.com:3306/VictoriaProFitnessDb')    
-    Session = sessionmaker(bind=engine)    
-    Base = DeclarativeBase()
+    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
+    
+    session = Session()
+    session.add(User(1,"user prueba"))
+    s = json.dumps(session.query(User).all(), cls=AlchemyEncoder)
+    
+    session.commit()
+    session.close()
+        
 
-    return {}
+    return s

@@ -1,11 +1,13 @@
-from sqlalchemy.orm import DeclarativeBase
+from datasources.mysql import Base
 from sqlalchemy import Column, String, Integer, Date
-
-class Base(DeclarativeBase):
-    pass
 
 
 class User(Base):
     __tablename__ = "User"
-    ShipName = Column(String,primary_key=True)
-    Freight = Column(String)
+    UserId = Column(Integer,primary_key=True)
+    Name = Column(String(100))
+    
+    def __init__(self, user_id, name):
+        self.UserId = user_id
+        self.Name = name
+    
